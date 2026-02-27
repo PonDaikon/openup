@@ -102,8 +102,7 @@ ol {
 
 .sp-only,
 .sp-fle,
-.xs-sp-only,
-.tab-sp-only {
+.xs-sp-only {
   display: none;
 }
 
@@ -948,7 +947,6 @@ ol {
   margin-bottom: 1.5rem; /* 24px */
   letter-spacing: 0.02em;
   overflow-wrap: break-word;
-  text-wrap: pretty;
 }
 .work-item__content p {
   font-size: 1rem; /* 16px */
@@ -1096,7 +1094,6 @@ ol {
   font-size: 1.5rem; /* 24px */
   margin-bottom: 1rem; /* 16px */
   letter-spacing: 0.05em;
-  text-wrap: balance;
 }
 .training-card h3 .accent {
   color: var(--color-primary);
@@ -1250,7 +1247,6 @@ ol {
   font-size: 1.5rem; /* 24px */
   font-weight: 800;
   letter-spacing: 0.02em;
-  text-wrap: pretty;
 }
 .evidence-card h4 .accent {
   background: linear-gradient(to right, #ffc021 0%, #ff7300 100%);
@@ -1610,11 +1606,10 @@ ol {
   position: relative;
   text-align: center;
   margin-bottom: 48px;
-  overflow: hidden; /* JOB DESCRIPTION文字が内側でクリップ */
+  overflow: visible;
 }
 .description-head h2 {
   position: relative;
-  isolation: auto; /* section-head h2の isolation: isolate をリセットし、description-headの overflow: hidden を有効にする */
   z-index: 1;
   margin: 0;
   font-size: 2.5rem;
@@ -1623,9 +1618,6 @@ ol {
 }
 .description-head h2::before {
   color: #fff;
-  /* vw基準でコンテナ内に収まるフォントサイズに上書き */
-  font-size: clamp(2rem, 7.5vw, 12.5rem);
-  white-space: nowrap;
 }
 .description-head p {
   position: relative;
@@ -2015,6 +2007,20 @@ ol {
   margin-top: 10px;
 }
 
+/* 2043px以上: キャッチコピーが段落ちしないようフォント拡大 */
+@media (min-width: 2044px) {
+  .fv__catch {
+    font-size: clamp(28px, 1.4vw, 36px);
+    white-space: nowrap;
+  }
+}
+/* 1686〜2043px: キャッチコピーが段落ちしないようフォントを調整 */
+@media (min-width: 1687px) and (max-width: 2043px) {
+  .fv__catch {
+    font-size: clamp(22px, 1.45vw, 28px);
+    white-space: nowrap;
+  }
+}
 @media (min-width: 1441px) {
   .fv {
     min-height: clamp(900px, 56.25vw, 1200px);
@@ -2055,28 +2061,6 @@ ol {
   }
 }
 
-/* 2044px以上: キャッチコピー・タイトルの段落ち防止（1441px以上のルールを上書き） */
-@media (min-width: 2044px) {
-  .fv__catch {
-    font-size: clamp(28px, 1.4vw, 36px);
-    white-space: nowrap;
-  }
-  .fv__content {
-    max-width: 700px; /* fv__title-line「ITEngエニアへ。」の段落ち防止 */
-  }
-}
-
-/* 1687～2043px: キャッチコピー・タイトルの段落ち防止（1441px以上のルールを上書き） */
-@media (min-width: 1687px) and (max-width: 2043px) {
-  .fv__catch {
-    font-size: clamp(22px, 1.45vw, 28px);
-    white-space: nowrap;
-  }
-  .fv__content {
-    max-width: 640px; /* fv__title-sub「学べる環境で新しい自分へ」の段落ち防止 */
-  }
-}
-
 @media (max-width: 1280px) {
   .work-item__media {
     width: 24vw;
@@ -2100,6 +2084,13 @@ ol {
     min-width: 90px;
   }
 }
+@media (max-width: 1200px) {
+  .work-item {
+    grid-template-columns: 112px minmax(0, 1fr) 300px;
+    padding: 24px 24px 24px 22px;
+    gap: 18px;
+  }
+}
 @media (max-width: 1210px) {
   .fv__content {
     max-width: 55%;
@@ -2110,67 +2101,32 @@ ol {
   .fv__title-sub {
     font-size: 2.5rem;
   }
-}/* 1024、1112px: 冠テキストが2段にならないよう調整 */
-@media (min-width: 1024px) and (max-width: 1112px) {
-  .fv__content {
-    max-width: 65%; /* 52%から広げて冠テキストが収まるように */
-  }
-  .fv__catch {
-    font-size: clamp(14px, 1.35vw, 20px);
-    white-space: nowrap;
-    letter-spacing: 0.01em;
-  }
-}
-@media (max-width: 1200px) {
-  .work-item {
-    grid-template-columns: 112px minmax(0, 1fr) 300px;
-    padding: 24px 24px 24px 22px;
-    gap: 18px;
-  }
 }
 /* ============================================================
-   1023px以下: FV 縦積みレイアウト（画像上段 / テキスト下段）
+   990px以下: FV 縦積みレイアウト（画像上段 / テキスト下段）
    ============================================================ */
-@media (max-width: 1023px) {
-  .tab-sp-only {
-    display: block;
-  }
-  /* --- FV外枠: SP画像を背景に、テキストを画像の上に重ねる ---
-       fv_sp.jpg の縦横比 780:1800 = 0.4333
-       fv全体を position:relative にし、
-       fv__bgに aspect-ratio: 780/1800 で画像の高さを対応させる。
-       fv__innerは position:absolute; bottom:0 で画像の下部に重ねる。
-       これにより幅が変わっても画像とテキストの距離感が保たれる。 --- */
-  /* --- FV: display:gridで画像とテキストを重ねる ---
-       fv__bgとfv__innerを同じグリッドセルに配置。
-       fvの高さはfv__innerのコンテンツ高さで決まる。
-       画像はfv全体を覆うように伸びる。 --- */
+@media (max-width: 990px) {
+  /* --- FV外枠 --- */
   .fv {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    overflow: hidden;
-    isolation: auto;
-    background: transparent;
-    margin-top: var(--header-h); /* fixedヘッダー分をmarginで確保 */
+    min-height: 0;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
   }
   .fv::after { content: none; }
 
-  /* --- 背景画像: グリッド内でテキストと重なる --- */
+  /* --- 上段: 画像 --- */
   .fv__bg {
-    grid-column: 1;
-    grid-row: 1;
     position: relative;
+    inset: auto;
     width: 100%;
+    height: clamp(280px, 52vw, 480px);
     overflow: hidden;
+    flex-shrink: 0;
     z-index: 0;
-    background: transparent;
-    align-self: stretch;
   }
   .fv__bg img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     -o-object-fit: cover;
@@ -2178,27 +2134,22 @@ ol {
     -o-object-position: center top;
        object-position: center top;
   }
-  .fv__bg::after { content: none; }
 
-  /* --- テキストエリア: 同じグリッドセルに配置し、FVの高さを決める ---
-       fv_sp.jpgの上部約48%に画像（人物部分）、下部にテキスト。
-       padding-topで画像の人物部分の高さ分を確保。 --- */
+  /* --- 下段: テキストエリア --- */
   .fv__inner {
-    grid-column: 1;
-    grid-row: 1;
-    position: relative;
+    position: static;
     z-index: 1;
     width: 100%;
-    /* fv_sp.jpgの上部約48%分の高さをpadding-topで確保: 230.77vw × 0.48 ≈ 110.8vw */
-    padding: 110.8vw 5% 2.5rem;
+    min-height: 0;
+    padding: 2rem 5% 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    background: transparent;
+    background: var(--color-bg);
   }
   .fv__content {
     max-width: 100%;
-    text-align: center;
+    text-align: left;
     padding: 0;
   }
 
@@ -2242,7 +2193,7 @@ ol {
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: flex-start;
   }
   .fv__actions .btn {
     width: 100%;
@@ -2259,7 +2210,7 @@ ol {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .fv__medal img { height: 60px; }
 }
@@ -2268,10 +2219,18 @@ ol {
    767px以下: SP追加調整（980pxのベースを引き継ぎ上書き）
    ============================================================ */
 @media (max-width: 767px) {
-  /* --- SP: grid方式を継続。SP幅では画像の上部約48%分をpadding-topで確保 --- */
+  /* --- 画像高さをSP用に縮小 --- */
+  .fv__bg {
+    height: clamp(220px, 58vw, 360px);
+  }
+  .fv__bg img {
+    -o-object-position: center top;
+       object-position: center top;
+  }
+
+  /* --- テキストエリアのpadding --- */
   .fv__inner {
-    /* SP幅では画像高さが大きいので少し大きめに設定: 230.77vw × 0.50 ≈ 115.4vw */
-    padding: 115.4vw 1.25rem 2rem;
+    padding: 1.5rem 1.25rem 2rem;
   }
 
   /* --- テキストをセンタリング --- */
@@ -2378,8 +2337,7 @@ ol {
   .fv__medals {
     flex-wrap: wrap;
     gap: 6px 8px;
-    justify-content: center;
-    align-items: flex-end;
+    justify-content: flex-start;
   }
   .cta-band__inner {
     grid-template-columns: 1fr;
@@ -2392,11 +2350,6 @@ ol {
   .worry-grid,
   .carrier-grid {
     grid-template-columns: 1fr;
-  }
-  .article-card h3,
-  .article-card p {
-    max-width: none;
-    width: 100%;
   }
   .carrier-stage {
     padding: 70px 0 82px;
@@ -2482,10 +2435,6 @@ ol {
     flex-direction: column;
     align-items: center;
     gap: 22px;
-  }
-  .training-card {
-    width: 100%;
-    max-width: 600px;
   }
   .training-card__media {
     margin-bottom: 18px;
@@ -3437,34 +3386,6 @@ ol {
     height: auto !important;
   }
 }
-/* 768〜840px: 募集要項カードのSVG画像・テキストがはみ出さないよう調整 */
-@media (min-width: 768px) and (max-width: 840px) {
-  .description-summary-card > * {
-    width: 100%;
-    max-width: 100%;
-  }
-  .description-summary-card__value img {
-    max-width: 100%;
-    height: auto;
-  }
-  .description-summary-card__value picture {
-    display: block;
-    max-width: 100%;
-  }
-  .description-summary-card {
-    padding: 18px 12px 14px;
-    overflow: hidden;
-  }
-  .description-summary-card__label {
-    font-size: 15px;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .description-summary-card__label img {
-    width: 22px;
-    height: 22px;
-  }
-}
 /* 764px以下: STEPの見出し「ステップ」を次の行に落とす */
 @media (max-width: 764px) {
   .step-head__title .accent {
@@ -3506,7 +3427,7 @@ ol {
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: "Montserrat", sans-serif;
-  font-size: clamp(3rem, 12.5vw, 12.5rem); /* vw単位でレスポンシブに */
+  font-size: 12.5rem; /* 200px */
   font-weight: 700;
   letter-spacing: 0.05em;
   color: #f8f8f8;
@@ -3518,22 +3439,14 @@ ol {
   z-index: -1;
 }
 
-h2.worry-head__title::before {
-  color: #fff !important;
-}
+h2.worry-head__title::before,
 .description-head h2::before {
   color: #fff !important;
-  /* JOB DESCRIPTIONが左右にはみ出ないよう、上書きで確実に適用 */
-  font-size: clamp(2rem, 7.5vw, 12.5rem) !important;
-  white-space: nowrap;
 }
 
 @media (max-width: 767px) {
   .section-head h2::before {
     font-size: 6.8571428571rem; /* 96px */
-  }
-  .description-head h2::before {
-    font-size: clamp(1.5rem, 7.5vw, 6.857rem) !important; /* SPでも内側に収まる */
   }
 }
 @media (max-width: 389px) {
@@ -3544,60 +3457,3 @@ h2.worry-head__title::before {
     width: 13em;
   }
 }/*# sourceMappingURL=style.css.map */
-
-
-/* ============================================================
-   追従CTAバー（1023px以下: SP/タブレット、FV通過後に表示）
-   ============================================================ */
-
-/* 1024px以上は非表示 */
-.sticky-cta {
-  display: none;
-}
-
-/* 1023px以下のみ表示 */
-@media (max-width: 1023px) {
-  .sticky-cta {
-    display: block;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
-    background: rgba(255, 255, 255, 0.97);
-    border-top: 1px solid rgba(0, 0, 0, 0.10);
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
-    padding: 10px 16px;
-    transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  .sticky-cta.is-visible {
-    transform: translateY(0);
-  }
-  .sticky-cta__inner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    max-width: 600px;
-    margin-inline: auto;
-  }
-  .sticky-cta__text {
-    display: none; /* SPはテキスト非表示、ボタンのみ */
-  }
-  .sticky-cta__actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    width: 100%;
-  }
-  .sticky-cta__actions .btn--sm {
-    flex: 1;
-    min-height: 52px;
-    font-size: 1rem;
-    font-weight: 700;
-    padding-inline: 12px;
-    white-space: nowrap;
-    border-radius: 999px;
-  }
-}
