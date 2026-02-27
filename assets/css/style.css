@@ -2152,7 +2152,7 @@ ol {
     overflow: hidden;
     isolation: auto;
     background: transparent;
-    margin-top: var(--header-h); /* fixedヘッダー分をmarginで確保 */
+    margin-top: -30px; /* ヘッダーに画像を潜り込ませる */
   }
   .fv::after { content: none; }
 
@@ -2189,8 +2189,8 @@ ol {
     position: relative;
     z-index: 1;
     width: 100%;
-    /* fv_sp.jpgの上部約48%分の高さをpadding-topで確保: 230.77vw × 0.48 ≈ 110.8vw */
-    padding: 110.8vw 5% 2.5rem;
+    /* fv_sp.jpgの上部約48%分の高さをpadding-topで確保: 230.77vw × 0.44 ≈ 101.5vw */
+    padding: 101.5vw 5% 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -2270,8 +2270,8 @@ ol {
 @media (max-width: 767px) {
   /* --- SP: grid方式を継続。SP幅では画像の上部約48%分をpadding-topで確保 --- */
   .fv__inner {
-    /* SP幅では画像高さが大きいので少し大きめに設定: 230.77vw × 0.50 ≈ 115.4vw */
-    padding: 115.4vw 1.25rem 2rem;
+    /* SP幅では画像高さが大きいので少し大きめに設定: 230.77vw × 0.46 ≈ 106.2vw */
+    padding: 106.2vw 1.25rem 2rem;
   }
 
   /* --- テキストをセンタリング --- */
@@ -2355,10 +2355,10 @@ ol {
 }
 @media (max-width: 1023px) {
   :root {
-    --header-h: 64px;
+    --header-h: 70px; /* padding-top(6px) + inner高さ(64px) */
   }
   .site-header {
-    padding-top: 14px;
+    padding-top: 6px;
   }
   .site-header__inner {
     width: min(100% - 20px, 980px);
@@ -2688,11 +2688,14 @@ ol {
   .site-footer__inner {
     width: min(100% - 30px, 360px);
   }
+  .fv {
+    margin-top: -30px; /* SP: ヘッダーに画像を潜り込ませる */
+  }
   .fv__inner {
     width: 100%;
   }
   .site-header {
-    padding-top: 16px;
+    padding-top: 6px;
   }
   .site-header__inner {
     width: min(100% - 30px, 360px);
