@@ -1026,6 +1026,7 @@
     (function () {
       var stickyCta = document.getElementById('stickyCta');
       var fvSection = document.getElementById('top');
+      var siteFooter = document.querySelector('.site-footer');
       if (!stickyCta || !fvSection) return;
 
       function updateStickyCta() {
@@ -1034,6 +1035,15 @@
           stickyCta.classList.remove('is-visible');
           stickyCta.setAttribute('aria-hidden', 'true');
           return;
+        }
+        // フッターが画面内に入ったら非表示
+        if (siteFooter) {
+          var footerTop = siteFooter.getBoundingClientRect().top;
+          if (footerTop <= window.innerHeight) {
+            stickyCta.classList.remove('is-visible');
+            stickyCta.setAttribute('aria-hidden', 'true');
+            return;
+          }
         }
         var fvBottom = fvSection.getBoundingClientRect().bottom;
         if (fvBottom < 0) {
