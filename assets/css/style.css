@@ -3604,3 +3604,29 @@ h2.worry-head__title::before {
     border-radius: 999px;
   }
 }
+
+/* ============================================================
+   応募フォームセクション
+   ============================================================ */
+.form-section {
+  background: #fff;
+}
+
+.form-section__embed {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-section__embed iframe {
+  display: block;
+  width: 100%;
+  min-width: 100%;
+  border: none;
+}
+
+@media (max-width: 767px) {
+  .form-section__embed iframe {
+    height: 600px;
+  }
+}
